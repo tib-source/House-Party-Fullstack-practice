@@ -1,5 +1,6 @@
 import string
 from django.db.models.query import QuerySet
+from django.http import response
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from rest_framework import generics, serializers
@@ -44,3 +45,19 @@ class CreateRoomView(APIView):
                             votes_to_skip=votes_to_skip)
                 room.save()
             return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+
+
+class GetRoom(APIView):
+    serializer_class = RoomSerializer
+    lookup_url = "code"
+    def get(self, request, format=None):
+        code = request.GET.get(self.lookup_url)
+        if code != None: 
+            room  = Room.objects.filter(code=code)
+            if room.count()> 0: 
+                room = room[0]
+                data = RoomSerializer(room).data
+                data['is_host'] = self.request.session.session_key == room.host
+                return Response(data, status=status.HTTP_200_OK)
+            return Response({'Room Not Found': 'Invalid Room Code'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'Bad Request': 'Code was Invalid'}, status=status.HTTP_404_NOT_FOUND)
