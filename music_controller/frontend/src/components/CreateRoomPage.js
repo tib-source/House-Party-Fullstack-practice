@@ -16,8 +16,44 @@ export default class CreateRoomPage extends Component {
   defaultVotes = 2;
   constructor(props) {
     super(props);
+
+    this.state = {
+      guestCanPause: true,
+      votesToSkip: this.defaultVotes
+    };
+
+    this.handleSubmit= this.handleSubmit.bind(this);
+    this.handleVotesChange= this.handleVotesChange.bind(this); 
+    this.handleGuestChange= this.handleGuestChange.bind(this);
   }
 
+  handleVotesChange(e){
+    this.setState({
+      votesToSkip: e.target.value,
+    })
+  }
+
+  handleGuestChange(e){
+    this.setState({
+      guestCanPause: e.target.value === "true" ? true : false,
+    })
+  }
+
+  handleSubmit(){
+    fetch('/api/create-room/', {
+      method: "POST", 
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        guest_can_pause: this.state.guestCanPause,
+        votes_to_skip: this.state.votesToSkip
+      })
+    })
+    .then(response => response.json())
+    .then(data=> console.log(data));
+  }
   render() {
     return (
       <Grid container spacing={1}>
@@ -31,7 +67,7 @@ export default class CreateRoomPage extends Component {
             <FormHelperText component="h6" >
               <div align="center">Guest Controll of Playback State</div>
             </FormHelperText>
-            <RadioGroup row defaultValue="true">
+            <RadioGroup row defaultValue="true" onChange={this.handleGuestChange}>
               <FormControlLabel
                 value="true"
                 control={<Radio color="primary" />}
@@ -50,6 +86,7 @@ export default class CreateRoomPage extends Component {
         <Grid item xs={12} align="center">
           <TextField
             required={true}
+            onChange={this.handleVotesChange}
             type="number"
             defaultValue={this.defaultVotes}
             inputProps={{ min: 1, style: { textAlign: "center" } }}
@@ -59,7 +96,7 @@ export default class CreateRoomPage extends Component {
           </FormHelperText>
         </Grid>
         <Grid item xs={12} align="center">
-          <Button color="secondary" variant="contained">
+          <Button color="secondary" variant="contained" onClick={this.handleSubmit}>
             Create A Room
           </Button>
         </Grid>
