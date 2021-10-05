@@ -1,5 +1,6 @@
 import React, { Component} from "react"
 import { render } from "react-dom"
+import './../../static/css/style.scss'
 
 export default class App extends Component{
     render(){
@@ -10,8 +11,8 @@ export default class App extends Component{
         )
     }
 }
-const divApp = document.getElementById("app") 
 
+const divApp = document.getElementById("app") 
 
 render(<App/>, divApp)
 
