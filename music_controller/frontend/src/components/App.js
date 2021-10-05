@@ -1,18 +1,26 @@
-import React, { Component} from "react"
+import React, { Component } from "react"
 import { render } from "react-dom"
-import './../../static/css/style.scss'
+import HomePage from "./HomePage"
 
-export default class App extends Component{
-    render(){
-        return(
+
+
+
+export default class App extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
             <div>
                 <h1>Hello, this is from React</h1>
+                <HomePage />
             </div>
         )
     }
 }
 
-const divApp = document.getElementById("app") 
+const divApp = document.getElementById("app")
 
-render(<App/>, divApp)
+render(<App />, divApp)
 
