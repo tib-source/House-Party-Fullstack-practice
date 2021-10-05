@@ -9,6 +9,6 @@ def home(request):
     return HttpResponse("Hello")
 
 
-class RoomView(generics.CreateAPIView):
+class RoomView(generics.ListCreateAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
