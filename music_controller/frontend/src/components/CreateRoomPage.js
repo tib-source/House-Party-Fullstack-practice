@@ -64,10 +64,14 @@ export default class CreateRoomPage extends Component {
         </Grid>
         <Grid item xs={12} align="center">
           <FormControl component="fieldset">
-            <FormHelperText component="h6" >
+            <FormHelperText component="h6">
               <div align="center">Guest Controll of Playback State</div>
             </FormHelperText>
-            <RadioGroup row defaultValue="true" onChange={this.handleGuestChange}>
+            <RadioGroup
+              row
+              defaultValue="true"
+              onChange={this.handleGuestChange}
+            >
               <FormControlLabel
                 value="true"
                 control={<Radio color="primary" />}
@@ -96,8 +100,12 @@ export default class CreateRoomPage extends Component {
           </FormHelperText>
         </Grid>
         <Grid item xs={12} align="center">
-          <Button color="secondary" variant="contained" onClick={this.handleSubmit}>
-            Create A Room
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={this.handleSubmit}
+          >
+            Create Room
           </Button>
         </Grid>
         <Grid item xs={12} align="center">
