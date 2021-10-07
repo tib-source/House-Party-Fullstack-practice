@@ -45,7 +45,6 @@ class CreateRoomView(APIView):
                             votes_to_skip=votes_to_skip)
                 room.save()
                 self.request.session['code'] = room.code
-
             return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
  
 
@@ -62,6 +61,11 @@ class GetRoom(APIView):
             if room.count()> 0: 
                 room = room[0]
                 data = RoomSerializer(room).data
+                print(' --------------------------------------------------------------')
+                print(' --------------------------------------------------------------')
+                print( RoomSerializer(room).data)
+                print(' --------------------------------------------------------------')
+                print(' --------------------------------------------------------------')
                 data['is_host'] = self.request.session.session_key == room.host
                 self.request.session['code'] = room.code
                 return Response(data, status=status.HTTP_200_OK)

@@ -19,27 +19,29 @@ export default class CreateRoomPage extends Component {
 
     this.state = {
       guestCanPause: true,
-      votesToSkip: this.defaultVotes
+      votesToSkip: this.defaultVotes,
     };
 
-    this.handleSubmit= this.handleSubmit.bind(this);
-    this.handleVotesChange= this.handleVotesChange.bind(this); 
-    this.handleGuestChange= this.handleGuestChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleVotesChange = this.handleVotesChange.bind(this);
+    this.handleGuestChange = this.handleGuestChange.bind(this);
   }
 
-  handleVotesChange(e){
+  handleVotesChange(e) {
+    console.log(e.target.value)
     this.setState({
       votesToSkip: e.target.value,
-    })
+    });
   }
 
-  handleGuestChange(e){
+  handleGuestChange(e) {
+    console.log(e.target.value)
     this.setState({
       guestCanPause: e.target.value === "true" ? true : false,
-    })
+    });
   }
 
-  handleSubmit(){
+  handleSubmit() {
     fetch("/api/create-room/", {
       method: "POST",
       headers: {

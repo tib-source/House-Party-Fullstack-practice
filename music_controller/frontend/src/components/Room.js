@@ -17,9 +17,16 @@ export class Room extends Component {
   }
 
   componentDidMount() {
-    fetch("/api/get-room" + "?code=" + this.roomCode)
-      .then((response) => response.json())
+    fetch("/api/get-room/" + "?code=" + this.roomCode)
+      .then((response) => {
+        if (response.ok){
+          return response.json()
+        }else{
+          this.props.history.push('/')
+        }
+      })
       .then((data) => {
+        console.log(data)
         return this.setState({
           votesToSkip: data.votes_to_skip,
           guestCanPause: data.guest_can_pause,
@@ -29,15 +36,13 @@ export class Room extends Component {
   }
 
   executeLeaveOrder() {
-    fetch("/api/leave", {
+    fetch("/api/leave/", {
       method: "POST",
       header: {
         "Content-Type": "application/json",
       },
-    }).then((response) => {
-      this.setState({
-        redirect: true,
-      });
+    }).then((_response) => {
+      this.props.history.push("/");
     });
   }
 
