@@ -17,9 +17,11 @@ export default class HomePage extends Component {
     this.state = {
       roomCode: null,
     };
+    this.checkUserCode = this.checkUserCode.bind(this);
+    this.getUserCode = this.getUserCode.bind(this);
   }
 
-  componentDidMount() {
+  getUserCode() {
     fetch("/api/user-in-room/")
       .then((response) => response.json())
       .then((data) =>
@@ -27,6 +29,14 @@ export default class HomePage extends Component {
           roomCode: data["code"],
         })
       );
+  }
+
+  checkUserCode() {
+    this.getUserCode();
+    return this.state.roomCode ? true : false;
+  }
+  componentDidMount() {
+    this.getUserCode();
   }
 
   renderHomePage() {
@@ -59,7 +69,7 @@ export default class HomePage extends Component {
             exact
             path="/"
             render={() =>
-              this.state.roomCode ? (
+              this.checkUserCode() ? (
                 <Redirect to={`/room/${this.state.roomCode}`} />
               ) : (
                 this.renderHomePage()

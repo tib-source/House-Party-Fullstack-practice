@@ -19,11 +19,10 @@ export class Room extends Component {
   componentDidMount() {
     fetch("/api/get-room/" + "?code=" + this.roomCode)
       .then((response) => {
-        if (response.ok){
-          return response.json()
-        }else{
+        if (!response.ok){
           this.props.history.push('/')
         }
+        return response.json()
       })
       .then((data) => {
         console.log(data)
@@ -41,7 +40,7 @@ export class Room extends Component {
       header: {
         "Content-Type": "application/json",
       },
-    }).then((_response) => {
+    }).then((response) => {
       this.props.history.push("/");
     });
   }

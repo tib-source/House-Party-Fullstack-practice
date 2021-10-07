@@ -61,11 +61,6 @@ class GetRoom(APIView):
             if room.count()> 0: 
                 room = room[0]
                 data = RoomSerializer(room).data
-                print(' --------------------------------------------------------------')
-                print(' --------------------------------------------------------------')
-                print( RoomSerializer(room).data)
-                print(' --------------------------------------------------------------')
-                print(' --------------------------------------------------------------')
                 data['is_host'] = self.request.session.session_key == room.host
                 self.request.session['code'] = room.code
                 return Response(data, status=status.HTTP_200_OK)
@@ -76,10 +71,12 @@ class UserInRoom(APIView):
     def get(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
-        data = {
-            "code" : self.request.session.get('code')
-        }
-        return JsonResponse(data, status=status.HTTP_200_OK)
+            return JsonResponse(data=None, status=status.HTTP_204_NO_CONTENT)
+        code = self.request.session.get('code')
+        if code:
+            return JsonResponse({'code': code}, status=status.HTTP_200_OK)
+        return JsonResponse({'code': False}, status=status.HTTP_200_OK)
+
             
 
 class LeaveRoom(APIView): 
