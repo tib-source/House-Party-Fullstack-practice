@@ -17,26 +17,29 @@ export default class HomePage extends Component {
     this.state = {
       roomCode: null,
     };
-    this.checkUserCode = this.checkUserCode.bind(this);
-    this.getUserCode = this.getUserCode.bind(this);
   }
 
-  getUserCode() {
+  clearCode = () => {
+    this.setState({
+      roomCode: null,
+    });
+  };
+
+  componentDidMount() {
     fetch("/api/user-in-room/")
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return this.setState({
+          roomCode: null,
+        });
+      })
       .then((data) =>
         this.setState({
           roomCode: data["code"],
         })
       );
-  }
-
-  checkUserCode() {
-    this.getUserCode();
-    return this.state.roomCode ? true : false;
-  }
-  componentDidMount() {
-    this.getUserCode();
   }
 
   renderHomePage() {
@@ -69,7 +72,7 @@ export default class HomePage extends Component {
             exact
             path="/"
             render={() =>
-              this.checkUserCode() ? (
+              this.state.roomCode ? (
                 <Redirect to={`/room/${this.state.roomCode}`} />
               ) : (
                 this.renderHomePage()
@@ -78,7 +81,12 @@ export default class HomePage extends Component {
           />
           <Route path="/join" component={RoomJoinPage} />
           <Route path="/create" component={CreateRoomPage} />
-          <Route path="/room/:roomCode" component={Room} />
+          <Route
+            path="/room/:roomCode"
+            render={(props) => {
+              return <Room {...props} leaveRoom={this.clearCode} />;
+            }}
+          />
         </Switch>
       </Router>
     );
