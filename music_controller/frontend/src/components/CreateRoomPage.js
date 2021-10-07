@@ -28,14 +28,12 @@ export default class CreateRoomPage extends Component {
   }
 
   handleVotesChange(e) {
-    console.log(e.target.value)
     this.setState({
       votesToSkip: e.target.value,
     });
   }
 
   handleGuestChange(e) {
-    console.log(e.target.value)
     this.setState({
       guestCanPause: e.target.value === "true" ? true : false,
     });

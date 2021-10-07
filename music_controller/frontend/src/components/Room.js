@@ -10,22 +10,21 @@ export class Room extends Component {
       guestCanPause: false,
       isHost: false,
       redirect: false,
+      showSetting: true,
     };
 
     this.roomCode = this.props.match.params.roomCode;
-    this.executeLeaveOrder = this.executeLeaveOrder.bind(this);
   }
 
   componentDidMount() {
     fetch("/api/get-room/" + "?code=" + this.roomCode)
       .then((response) => {
-        if (!response.ok){
-          this.props.history.push('/')
+        if (!response.ok) {
+          this.props.history.push("/");
         }
-        return response.json()
+        return response.json();
       })
       .then((data) => {
-        console.log(data)
         return this.setState({
           votesToSkip: data.votes_to_skip,
           guestCanPause: data.guest_can_pause,
@@ -34,7 +33,28 @@ export class Room extends Component {
       });
   }
 
-  executeLeaveOrder() {
+  updateShowSetting = () => {
+    this.setState({
+      showSetting: !this.state.showSetting,
+    });
+  };
+
+  renderSettingButton = () => {
+    return (
+      <Grid item xs={12}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => this.updateShowSetting}
+        >
+          Setting
+        </Button>
+      </Grid>
+    );
+  };
+
+  executeLeaveOrder = () => {
+    this.props.leaveRoom();
     fetch("/api/leave/", {
       method: "POST",
       header: {
@@ -43,7 +63,7 @@ export class Room extends Component {
     }).then((response) => {
       this.props.history.push("/");
     });
-  }
+  };
 
   render() {
     return (
@@ -69,11 +89,12 @@ export class Room extends Component {
             isHost : {this.state.isHost.toString()}
           </Typography>
         </Grid>
+        {this.state.isHost && this.renderSettingButton()}
         <Grid item xs={12}>
           <Button
             color="secondary"
             variant="contained"
-            onClick={() => this.executeLeaveOrder()}
+            onClick={this.executeLeaveOrder}
           >
             Leave Room
           </Button>
