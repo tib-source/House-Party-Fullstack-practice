@@ -4,6 +4,7 @@ from django.http import response
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from rest_framework import generics, serializers
+from rest_framework.fields import NullBooleanField
 
 from .models import Room
 from .serializers import CreateRoomSerializer, RoomSerializer
@@ -76,3 +77,18 @@ class UserInRoom(APIView):
         }
         return JsonResponse(data, status=status.HTTP_200_OK)
             
+
+class LeaveRoom(APIView): 
+    def post(self,request,format=None):
+        if 'code' in self.request.session:
+            self.request.session.pop('code')
+            queryset = Room.objects.filter(host=self.request.session.session_key)
+            if len(queryset) > 0:
+                queryset[0].delete()
+            return Response(data={'Message': 'Room Left'}, status=status.HTTP_200_OK)
+        return Response(data={'WUT': 'How did you manage to get this error'}, status=status.HTTP_200_OK)
+
+
+
+
+        

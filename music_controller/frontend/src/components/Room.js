@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Grid, Button, Typography } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 export class Room extends Component {
   constructor(props) {
     super(props);
@@ -9,9 +9,11 @@ export class Room extends Component {
       votesToSkip: 2,
       guestCanPause: false,
       isHost: false,
+      redirect: false,
     };
 
     this.roomCode = this.props.match.params.roomCode;
+    this.executeLeaveOrder = this.executeLeaveOrder.bind(this);
   }
 
   componentDidMount() {
@@ -26,31 +28,49 @@ export class Room extends Component {
       });
   }
 
+  executeLeaveOrder() {
+    fetch("/api/leave", {
+      method: "POST",
+      header: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      this.setState({
+        redirect: true,
+      });
+    });
+  }
+
   render() {
     return (
-      <Grid container align='center' spacing={1}>
-        <Grid item xs={12} >
-          <Typography variant='h4' component='h4'>
+      <Grid container align="center" spacing={1}>
+        {this.state.redirect && <Redirect push to="/"></Redirect>}
+        <Grid item xs={12}>
+          <Typography variant="h4" component="h4">
             Code : {this.roomCode}
           </Typography>
         </Grid>
-        <Grid item xs={12} >
-        <Typography variant='h6' component='h6'>
+        <Grid item xs={12}>
+          <Typography variant="h6" component="h6">
             Votes : {this.state.votesToSkip}
           </Typography>
         </Grid>
-        <Grid item xs={12} >
-        <Typography variant='h6' component='h6'>
+        <Grid item xs={12}>
+          <Typography variant="h6" component="h6">
             guestCanPause : {this.state.guestCanPause.toString()}
           </Typography>
         </Grid>
-        <Grid item xs={12} >
-        <Typography variant='h6' component='h6'>
+        <Grid item xs={12}>
+          <Typography variant="h6" component="h6">
             isHost : {this.state.isHost.toString()}
           </Typography>
         </Grid>
-        <Grid item xs={12} >
-          <Button color='secondary' variant='contained' to='/' component={Link}>
+        <Grid item xs={12}>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() => this.executeLeaveOrder()}
+          >
             Leave Room
           </Button>
         </Grid>
