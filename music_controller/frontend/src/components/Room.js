@@ -8,10 +8,10 @@ export class Room extends Component {
 
     this.state = {
       votesToSkip: 2,
-      guestCanPause: false,
+      guestCanPause: false, 
       isHost: false,
       redirect: false,
-      showSetting: true,
+      showSetting: false,
     };
 
     this.roomCode = this.props.match.params.roomCode;
@@ -75,7 +75,9 @@ export class Room extends Component {
             votesToSkip={this.state.votesToSkip}
             guestCanPause={this.state.guestCanPause}
             roomCode={this.roomCode}
-            updateCallback={null}
+            updateCallBack={this.updateShowSetting}
+            updateState={this.setState}
+            childHistory = {this.props.history}
           />
         </Grid>
         <Grid item xs={12}>
