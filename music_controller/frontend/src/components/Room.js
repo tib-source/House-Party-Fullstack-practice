@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Grid, Button, Typography } from "@material-ui/core";
 import { Redirect, Link } from "react-router-dom";
+import CreateRoomPage from "./CreateRoomPage";
 export class Room extends Component {
   constructor(props) {
     super(props);
@@ -33,9 +34,9 @@ export class Room extends Component {
       });
   }
 
-  updateShowSetting = () => {
+  updateShowSetting = (bool) => {
     this.setState({
-      showSetting: !this.state.showSetting,
+      showSetting: bool,
     });
   };
 
@@ -45,7 +46,7 @@ export class Room extends Component {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => this.updateShowSetting}
+          onClick={() => this.updateShowSetting(true)}
         >
           Setting
         </Button>
@@ -65,7 +66,35 @@ export class Room extends Component {
     });
   };
 
+  renderSetting = () => {
+    return (
+      <Grid container align="center" spacing={1}>
+        <Grid item xs={12}>
+          <CreateRoomPage
+            update={true}
+            votesToSkip={this.state.votesToSkip}
+            guestCanPause={this.state.guestCanPause}
+            roomCode={this.roomCode}
+            updateCallback={null}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => this.updateShowSetting(false)}
+          >
+            Close
+          </Button>
+        </Grid>
+      </Grid>
+    );
+  };
+
   render() {
+    if (this.state.showSetting) {
+      return this.renderSetting();
+    }
     return (
       <Grid container align="center" spacing={1}>
         {this.state.redirect && <Redirect push to="/"></Redirect>}

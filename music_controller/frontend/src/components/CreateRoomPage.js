@@ -13,13 +13,19 @@ import {
 import { Link } from "react-router-dom";
 
 export default class CreateRoomPage extends Component {
-  defaultVotes = 2;
+  static defaultProps = {
+    votesToSkip: 2,
+    guestCanPause: true,
+    update: false,
+    roomCode: null,
+    updateCallBack: () => {},
+  };
   constructor(props) {
     super(props);
 
     this.state = {
-      guestCanPause: true,
-      votesToSkip: this.defaultVotes,
+      guestCanPause: false,
+      votesToSkip: 2,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -54,12 +60,27 @@ export default class CreateRoomPage extends Component {
       .then((response) => response.json())
       .then((data) => this.props.history.push("/room/" + data.code));
   }
+
+  renderButtons = () => {
+    <>
+      <Grid item xs={12} align="center">
+        <Button color="primary" variant="contained" to="/" component={Link}>
+          Back
+        </Button>
+      </Grid>
+    </>;
+  };
+
+  updateRoom = () => {
+    console.log("Room Updated");
+    this.props.history.push(`/room/${this.props.roomCode}`);
+  };
   render() {
     return (
       <Grid container spacing={1}>
         <Grid item xs={12} align="center">
           <Typography component="h4" variant="h4">
-            Create A Room
+            {this.props.update ? "Update Room" : "Create A Room"}
           </Typography>
         </Grid>
         <Grid item xs={12} align="center">
@@ -92,7 +113,7 @@ export default class CreateRoomPage extends Component {
             required={true}
             onChange={this.handleVotesChange}
             type="number"
-            defaultValue={this.defaultVotes}
+            defaultValue={this.state.votesToSkip}
             inputProps={{ min: 1, style: { textAlign: "center" } }}
           ></TextField>
           <FormHelperText component="h6">
@@ -103,16 +124,14 @@ export default class CreateRoomPage extends Component {
           <Button
             color="secondary"
             variant="contained"
-            onClick={this.handleSubmit}
+            onClick={() =>
+              this.props.update ? this.updateRoom() : this.handleSubmit()
+            }
           >
-            Create Room
+            {this.props.update ? "Save" : "Create Room"}
           </Button>
         </Grid>
-        <Grid item xs={12} align="center">
-          <Button color="primary" variant="contained" to="/" component={Link}>
-            Back
-          </Button>
-        </Grid>
+        {!this.props.update && this.renderButtons()}
       </Grid>
     );
   }
