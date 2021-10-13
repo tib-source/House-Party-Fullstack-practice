@@ -10,7 +10,7 @@ import {
   RadioGroup,
   FormControlLabel,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 export default class CreateRoomPage extends Component {
   static defaultProps = {
@@ -72,9 +72,29 @@ export default class CreateRoomPage extends Component {
   };
 
   updateRoom = () => {
-    console.log("Room Updated");
-    this.props.history.push(`/room/${this.props.roomCode}`);
+    fetch("/api/update-room/", {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        guest_can_pause: this.state.guestCanPause,
+        votes_to_skip: this.state.votesToSkip,
+        code: this.props.roomCode,
+      }),
+    }).then((response) => {
+      if (response.ok) {
+        console.log("Room Updated");
+        this.props.childHistory.push(`/room/${this.props.roomCode}`);
+        this.props.updateCallBack(false);
+        return "HORRAY";
+      } else {
+        return "FAILLL";
+      }
+    });
   };
+
   render() {
     return (
       <Grid container spacing={1}>
