@@ -9,6 +9,7 @@ import {
   Radio,
   RadioGroup,
   FormControlLabel,
+  Collapse,
 } from "@material-ui/core";
 import { Link, useHistory } from "react-router-dom";
 
@@ -26,6 +27,8 @@ export default class CreateRoomPage extends Component {
     this.state = {
       guestCanPause: false,
       votesToSkip: 2,
+      errorMsg: "",
+      successMsg: "",
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -85,19 +88,26 @@ export default class CreateRoomPage extends Component {
       }),
     }).then((response) => {
       if (response.ok) {
-        console.log("Room Updated");
-        this.props.childHistory.push(`/room/${this.props.roomCode}`);
-        this.props.updateCallBack(false);
-        return "HORRAY";
+        this.setState({
+          successMsg: "Room Successfully Updated.",
+        });
       } else {
-        return "FAILLL";
+        this.setState({
+          errorMsg: "Room Update Failed.",
+        });
       }
+      this.props.updateCallBack();
     });
   };
 
   render() {
     return (
       <Grid container spacing={1}>
+        <Grid item xs={12} align="center">
+          <Collapse in={this.state.errorMsg == ""}>
+            {this.state.successMsg}
+          </Collapse>
+        </Grid>
         <Grid item xs={12} align="center">
           <Typography component="h4" variant="h4">
             {this.props.update ? "Update Room" : "Create A Room"}
@@ -110,8 +120,8 @@ export default class CreateRoomPage extends Component {
             </FormHelperText>
             <RadioGroup
               row
-              defaultValue="true"
               onChange={this.handleGuestChange}
+              defaultValue={this.props.guestCanPause}
             >
               <FormControlLabel
                 value="true"
@@ -133,7 +143,7 @@ export default class CreateRoomPage extends Component {
             required={true}
             onChange={this.handleVotesChange}
             type="number"
-            defaultValue={this.state.votesToSkip}
+            defaultValue={this.props.votesToSkip}
             inputProps={{ min: 1, style: { textAlign: "center" } }}
           ></TextField>
           <FormHelperText component="h6">

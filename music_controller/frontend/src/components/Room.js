@@ -15,9 +15,10 @@ export class Room extends Component {
     };
 
     this.roomCode = this.props.match.params.roomCode;
+    this.getRoomDetails()
   }
 
-  componentDidMount() {
+  getRoomDetails =() => {
     fetch("/api/get-room/" + "?code=" + this.roomCode)
       .then((response) => {
         if (!response.ok) {
@@ -75,7 +76,7 @@ export class Room extends Component {
             votesToSkip={this.state.votesToSkip}
             guestCanPause={this.state.guestCanPause}
             roomCode={this.roomCode}
-            updateCallBack={this.updateShowSetting}
+            updateCallBack={this.getRoomDetails}
             updateState={this.setState}
             childHistory = {this.props.history}
           />
