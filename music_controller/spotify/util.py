@@ -2,12 +2,12 @@ from datetime import timedelta
 
 from requests.api import post
 
-from music_controller.spotify.credentials import CLIENT_ID, CLIENT_SECRET
+from .credentials import CLIENT_ID, CLIENT_SECRET
 from .models import SpotifyToken
 from django.utils import timezone
 
 def get_user_token(session_id):
-    user = SpotifyToken.object.filter(user-session_id)
+    user = SpotifyToken.objects.filter(user=session_id)
     if user.exists():
         return user[0]
     else:
@@ -16,6 +16,7 @@ def get_user_token(session_id):
 
 def crud_tokens(session_id, access_token, token_type, expires_in, refresh_token):
     tokens = get_user_token(session_id)
+    print(expires_in, 'THIS IS EXPIRY TIME')
     expires_in = timezone.now() + timedelta(seconds=expires_in)  # time till expiry
     if tokens:
         tokens.token_type = token_type

@@ -8,17 +8,19 @@ export class Room extends Component {
 
     this.state = {
       votesToSkip: 2,
-      guestCanPause: false, 
+      guestCanPause: false,
       isHost: false,
       redirect: false,
       showSetting: false,
+      spotifyAuth: false,
     };
 
     this.roomCode = this.props.match.params.roomCode;
-    this.getRoomDetails()
+    this.getRoomDetails();
+    console.log('object');
   }
 
-  getRoomDetails =() => {
+  getRoomDetails = () => {
     fetch("/api/get-room/" + "?code=" + this.roomCode)
       .then((response) => {
         if (!response.ok) {
@@ -27,13 +29,38 @@ export class Room extends Component {
         return response.json();
       })
       .then((data) => {
-        return this.setState({
+        this.setState({
           votesToSkip: data.votes_to_skip,
           guestCanPause: data.guest_can_pause,
           isHost: data.is_host,
-        });
+        })
+
+        if(this.state.isHost){
+          this.authSpotify()
+        }
+
       });
-  }
+  };
+
+  authSpotify = () => {
+    fetch("/spotify/is-auth/")
+      .then((response) => {
+        console.log('BROTHER')
+        console.log(response)
+        return response.json();
+      })
+      .then((data) => {
+        this.setState({
+          spotifyAuth: data.status,
+        });
+        if (!data.status) {
+          fetch("/spotify/get-auth-url/")
+            .then((response) => response.json())
+            .then((data) => 
+              window.location.replace(data.url));
+        }
+      });
+  };
 
   updateShowSetting = (bool) => {
     this.setState({
@@ -78,7 +105,7 @@ export class Room extends Component {
             roomCode={this.roomCode}
             updateCallBack={this.getRoomDetails}
             updateState={this.setState}
-            childHistory = {this.props.history}
+            childHistory={this.props.history}
           />
         </Grid>
         <Grid item xs={12}>
