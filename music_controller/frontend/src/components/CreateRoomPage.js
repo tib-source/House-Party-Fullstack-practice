@@ -191,3 +191,22 @@ export default class CreateRoomPage extends Component {
     );
   }
 }
+
+ 
+// `
+// creat spotify applicatin
+//   has client id 
+//   has client secret
+
+// request authorization to access data ->
+//  displays prompt for user to log in ->
+//   redirect to our website
+  
+// recieved code -> allows to request token -> shows authorization 
+
+// token used to make requests 
+//   -> returns access and refresh tokens
+
+//   acess token -> gives access to spotify api -> expired in 1 hour
+//   refresh token -> used to get new access token if access token is expired
+// `
