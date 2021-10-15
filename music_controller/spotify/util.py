@@ -38,6 +38,7 @@ def check_auth(session_id):
     if date <= timezone.now():
       refresh(session_id)
       return True
+    return True
   return False
 
 
