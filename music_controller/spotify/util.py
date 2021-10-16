@@ -8,7 +8,7 @@ from .models import SpotifyToken
 from django.utils import timezone
 
 
-BASE_URL = 'https://api.spotify.com/v1/me'
+BASE_URL = 'https://api.spotify.com/v1/me/'
 
 
 def get_user_token(session_id):
@@ -31,7 +31,7 @@ def crud_tokens(session_id, access_token, token_type, expires_in, refresh_token)
         tokens.save(update_fields=[
                     "token_type", "access_token", "refresh_token", "expires_in"])
     else:
-        tokens = SpotifyToken(user=session_id, access_token=access_token,
+        tokens = SpotifyToken(user=session_id, access_token=access_token, refresh_token=refresh_token,
                               token_type=token_type, expires_in=expires_in)
         tokens.save()
 

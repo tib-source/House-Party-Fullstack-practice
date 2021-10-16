@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response 
 from requests import Request, post
-from .util import check_auth, get_user_token, crud_tokens
+from .util import *
 from api.models import Room
 class AuthURL(APIView):
   def get(self, request, format=None):
@@ -21,7 +21,7 @@ class AuthURL(APIView):
 
 
 
-def spotify_callback(request):
+def spotify_callback( request):
   code = request.GET.get('code')
   error = request.GET.get('error')
 
@@ -59,6 +59,14 @@ class Authenticated(APIView):
 class CurrentSong(APIView):
   def get(self,request):
     code = self.request.session.get('code')
-    room = Room.objects.filter(code=code)[0]
+    room = Room.objects.filter(code=code)
+    if room.exists():
+      room = room[0]
+    else:
+      return Response({'Bad Request': 'No Room Found'}, status=status.HTTP_404_NOT_FOUND)
     host = room.host
-    endpoint = '/player/currently-playing'
+    endpoint = 'player/currently-playing'
+    response = spotify_request(host, endpoint)
+    print(response)
+
+    return Response({'response': response}, status=status.HTTP_200_OK)
