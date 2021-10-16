@@ -1,7 +1,7 @@
 from datetime import timedelta
 from http.client import ResponseNotReady
 
-from requests.api import post, put, get
+from requests import post, put, get
 
 from .credentials import CLIENT_ID, CLIENT_SECRET
 from .models import SpotifyToken
@@ -70,16 +70,13 @@ def refresh(session_id):
 
 def spotify_request(session_id, endpoint, post_=False, put_=False):
   tokens = get_user_token(session_id)
-  header = {
-    'Content-Type': 'application/json' , 'Authorization': 'Bearer ' + tokens.access_token
-    }
+  header = {'Content-Type': 'application/json' , 'Authorization': 'Bearer ' + tokens.access_token}
   if post_:
-    post(BASE_URL + endpoint, header)
+    post(BASE_URL + endpoint, headers=header)
   if put_:
-    put(BASE_URL + endpoint, header)
+    put(BASE_URL + endpoint, headers=header)
   
   response = get(BASE_URL + endpoint, {}, headers=header)
-
   try: 
     return response.json()
   except: 
