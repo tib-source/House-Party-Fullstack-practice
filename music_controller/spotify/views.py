@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response 
 from requests import Request, post
 from .util import check_auth, get_user_token, crud_tokens
-
+from api.models import Room
 class AuthURL(APIView):
   def get(self, request, format=None):
     scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
@@ -53,3 +53,12 @@ class Authenticated(APIView):
   def get(self, request): 
     is_auth = check_auth(self.request.session.session_key)
     return Response({'status': is_auth}, status=status.HTTP_200_OK)
+
+
+
+class CurrentSong(APIView):
+  def get(self,request):
+    code = self.request.session.get('code')
+    room = Room.objects.filter(code=code)[0]
+    host = room.host
+    endpoint = '/player/currently-playing'
