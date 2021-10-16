@@ -8,3 +8,4 @@ urlpatterns = [
     path('is-auth/', Authenticated.as_view()),
     path('current-song/', CurrentSong.as_view()),
 ]
+ 

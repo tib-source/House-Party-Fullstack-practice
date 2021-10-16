@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { Grid, Button, Typography } from "@material-ui/core";
 import { Redirect, Link } from "react-router-dom";
 import CreateRoomPage from "./CreateRoomPage";
+
+
+
 export class Room extends Component {
   constructor(props) {
     super(props);
@@ -13,13 +16,19 @@ export class Room extends Component {
       redirect: false,
       showSetting: false,
       spotifyAuth: false,
+      song: {},
     };
 
     this.roomCode = this.props.match.params.roomCode;
-    this.getRoomDetails();
-    console.log('object');
   }
 
+  componentDidMount() {
+    this.getRoomDetails();
+    this.interval = setInterval(this.getCurrentSong, 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
   getRoomDetails = () => {
     fetch("/api/get-room/" + "?code=" + this.roomCode)
       .then((response) => {
@@ -33,20 +42,19 @@ export class Room extends Component {
           votesToSkip: data.votes_to_skip,
           guestCanPause: data.guest_can_pause,
           isHost: data.is_host,
-        })
+        });
 
-        if(this.state.isHost){
-          this.authSpotify()
+        if (this.state.isHost) {
+          this.authSpotify();
         }
-
       });
   };
 
   authSpotify = () => {
     fetch("/spotify/is-auth/")
       .then((response) => {
-        console.log('BROTHER')
-        console.log(response)
+        console.log("BROTHER");
+        console.log(response);
         return response.json();
       })
       .then((data) => {
@@ -56,10 +64,24 @@ export class Room extends Component {
         if (!data.status) {
           fetch("/spotify/get-auth-url/")
             .then((response) => response.json())
-            .then((data) => 
-              window.location.replace(data.url));
+            .then((data) => window.location.replace(data.url));
         }
       });
+  };
+
+  getCurrentSong = () => {
+    fetch("/spotify/current-song/")
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return {};
+      })
+      .then((data) =>
+        this.setState({
+          song: data,
+        })
+      );
   };
 
   updateShowSetting = (bool) => {
@@ -133,21 +155,7 @@ export class Room extends Component {
             Code : {this.roomCode}
           </Typography>
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6" component="h6">
-            Votes : {this.state.votesToSkip}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6" component="h6">
-            guestCanPause : {this.state.guestCanPause.toString()}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h6" component="h6">
-            isHost : {this.state.isHost.toString()}
-          </Typography>
-        </Grid>
+        {console.log(this.state.song)}
         {this.state.isHost && this.renderSettingButton()}
         <Grid item xs={12}>
           <Button
