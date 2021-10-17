@@ -91,7 +91,7 @@ def get_device_id(host):
 
 
 def play_song(session_id): 
-  return spotify_request(session_id, "player/play", put_=True)
+  return spotify_request(session_id, 'player/play', put_=True)
 
   
 def pause_song(session_id): 
