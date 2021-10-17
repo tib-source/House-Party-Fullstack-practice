@@ -1,3 +1,4 @@
+from api.serializers import RoomSerializer
 from http.client import error
 from django.shortcuts import redirect, render
 from .credentials import *
@@ -84,7 +85,7 @@ class CurrentSong(APIView):
 
     item = response.get('item')
     duration = item.get('duration_ms')
-    album_cover = item.get('album').get('images')[0].get('url')
+    album_cover = item.get('album').get('images')[1].get('url')
     progress = response.get('progress_ms')
     is_playing = response.get('is_playing')
     song_id = item.get('id')
@@ -97,15 +98,80 @@ class CurrentSong(APIView):
         artist_string += ', '
         name = artist.get('name')
         artist_string += name
+      else: 
+        artist_string = artist.get('name')
     
     song = {
       'title' : item.get('name'),
       'artist': artist_string,
       'duration' : duration,
       'time': progress,
-      'image_ulr': album_cover, 
+      'image_url': album_cover, 
       'is_playing' : is_playing,
       'id': song_id,
       'votes' : 0
     }
     return Response(song, status=status.HTTP_200_OK)
+
+
+class PauseSong(APIView):
+  def post(self, request, format=None):
+    code = request.data.get('code')
+    room = Room.objects.filter(code=code)[0]
+
+    if self.request.session.session_key == room.host or room.guest_can_pause: 
+      pause_song(room.host)
+      return Response({}, status=status.HTTP_204_NO_CONTENT)
+    return Response({}, status=status.HTTP_403_FORBIDDEN)
+    
+    
+
+class PlaySong(APIView):
+  def post(self, request, format=None):
+    code = request.data.get('code')
+    room = Room.objects.filter(code=code)[0]
+
+    if self.request.session.session_key == room.host or room.guest_can_pause: 
+      play_song(room.host)
+      return Response({}, status=status.HTTP_204_NO_CONTENT)
+    return Response({}, status=status.HTTP_403_FORBIDDEN)
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    # host = room.host
+    # tokens = get_user_token(host)
+    # device_id = get_device_id(host)
+
+
+
+
+
+
+  

@@ -67,8 +67,9 @@ def refresh(session_id):
 
 
 
-def spotify_request(session_id, endpoint, post_=False, put_=False):
+def spotify_request(session_id, endpoint, post_=False, put_=False, header={}):
   tokens = get_user_token(session_id)
+
   header = {'Content-Type': 'application/json' , 'Authorization': 'Bearer ' + tokens.access_token}
   if post_:
     post(BASE_URL + endpoint, headers=header)
@@ -80,3 +81,20 @@ def spotify_request(session_id, endpoint, post_=False, put_=False):
     return response.json()
   except: 
     return {'Error': 'Issue with request'}
+
+
+def get_device_id(host):
+  endpoint = 'player/devices'
+  response = spotify_request(host, endpoint)
+  try: 
+    return response.get('devices')[0].get('id')
+  except: 
+    return {'Error' : "No Devices"}
+
+
+def play_song(session_id): 
+  return spotify_request(session_id, 'player/play', put_=True)
+
+  
+def play_song(session_id): 
+  return spotify_request(session_id, 'player/pause', put_=True)
