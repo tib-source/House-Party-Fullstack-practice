@@ -11,11 +11,7 @@ from .util import *
 from api.models import Room
 import logging
 
-logger = logging.getLogger('viewDebuggerMine')
 
-logger.debug('@@'*23) 
-logger.error('@@'*23) 
-logger.warn('@@'*23) 
 
 class AuthURL(APIView):
   def get(self, request, format=None):
