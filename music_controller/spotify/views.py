@@ -86,7 +86,7 @@ class CurrentSong(APIView):
 
     item = response.get('item')
     duration = item.get('duration_ms')
-    album_cover = item.get('album').get('images')[2].get('url')
+    album_cover = item.get('album').get('images')[1].get('url')
     progress = response.get('progress_ms')
     is_playing = response.get('is_playing')
     song_id = item.get('id')
