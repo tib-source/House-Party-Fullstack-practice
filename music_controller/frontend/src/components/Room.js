@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import { Grid, Button, Typography } from "@material-ui/core";
 import { Redirect, Link } from "react-router-dom";
 import CreateRoomPage from "./CreateRoomPage";
-
-
+import MusicPlayer from "./MusciPlayer";
 
 export class Room extends Component {
   constructor(props) {
@@ -155,7 +154,9 @@ export class Room extends Component {
             Code : {this.roomCode}
           </Typography>
         </Grid>
-        {console.log(this.state.song)}
+        <Grid item align="center">
+          <MusicPlayer {...this.state.song} />
+        </Grid>
         {this.state.isHost && this.renderSettingButton()}
         <Grid item xs={12}>
           <Button

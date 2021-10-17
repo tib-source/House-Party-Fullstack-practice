@@ -7,6 +7,14 @@ from rest_framework.response import Response
 from requests import Request, post
 from .util import *
 from api.models import Room
+import logging
+
+logger = logging.getLogger('viewDebuggerMine')
+
+logger.debug('@@'*23) 
+logger.error('@@'*23) 
+logger.warn('@@'*23) 
+
 class AuthURL(APIView):
   def get(self, request, format=None):
     scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
@@ -33,7 +41,9 @@ def spotify_callback( request):
     "client_secret": CLIENT_SECRET
   }).json()
 
-  access_token= response.get('access_token')
+
+
+  access_token = response.get('access_token')
   token_type = response.get('token_type')
   refresh_token = response.get('refresh_token')
   expires_in = response.get('expires_in')
@@ -42,7 +52,7 @@ def spotify_callback( request):
   if not request.session.exists(request.session.session_key):
     request.session.create()
   crud_tokens(
-    request.session.session_key, access_token, token_type, expires_in, refresh_token
+    request.session.session_key,access_token, token_type, expires_in, refresh_token
   )
 
   return redirect('frontend:')
