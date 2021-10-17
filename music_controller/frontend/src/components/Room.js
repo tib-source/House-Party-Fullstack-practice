@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Grid, Button, Typography } from "@material-ui/core";
 import { Redirect, Link } from "react-router-dom";
 import CreateRoomPage from "./CreateRoomPage";
-import MusicPlayer from "./MusciPlayer";
+import MusicPlayer from "./MusicPlayer";
 
 export class Room extends Component {
   constructor(props) {
