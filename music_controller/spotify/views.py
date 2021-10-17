@@ -1,3 +1,4 @@
+from requests.models import codes
 from api.serializers import RoomSerializer
 from http.client import error
 from django.shortcuts import redirect, render
@@ -115,11 +116,11 @@ class CurrentSong(APIView):
 
 
 class PauseSong(APIView):
-  def post(self, request, format=None):
-    code = request.data.get('code')
+  def put(self, request, format=None):
+    code = self.request.session.get('code')
     room = Room.objects.filter(code=code)[0]
 
-    if self.request.session.session_key == room.host or room.guest_can_pause: 
+    if self.request.session.session_key == room.host or room.guest_can_pause:
       pause_song(room.host)
       return Response({}, status=status.HTTP_204_NO_CONTENT)
     return Response({}, status=status.HTTP_403_FORBIDDEN)
@@ -127,11 +128,11 @@ class PauseSong(APIView):
     
 
 class PlaySong(APIView):
-  def post(self, request, format=None):
-    code = request.data.get('code')
+  def put(self, request, format=None):
+    code = self.request.session.get('code')
     room = Room.objects.filter(code=code)[0]
 
-    if self.request.session.session_key == room.host or room.guest_can_pause: 
+    if self.request.session.session_key == room.host or room.guest_can_pause:
       play_song(room.host)
       return Response({}, status=status.HTTP_204_NO_CONTENT)
     return Response({}, status=status.HTTP_403_FORBIDDEN)

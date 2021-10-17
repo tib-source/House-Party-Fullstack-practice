@@ -155,8 +155,7 @@ export class Room extends Component {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          {console.log(this.state.song.image_url)}
-          <MusicPlayer {...this.state.song} />
+          <MusicPlayer code={this.state.roomCode} {...this.state.song} />
         </Grid>
         {this.state.isHost && this.renderSettingButton()}
         <Grid item xs={12}>

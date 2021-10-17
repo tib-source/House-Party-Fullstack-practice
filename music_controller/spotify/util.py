@@ -59,8 +59,6 @@ def refresh(session_id):
   access_token = response.get('access_token')
   token_type= response.get('token_type')
   expires_in= response.get('expires_in')
-  refresh_token= response.get('refresh_token')
-
   crud_tokens(
     session_id, access_token, token_type, expires_in, refresh_token
   )
@@ -93,8 +91,8 @@ def get_device_id(host):
 
 
 def play_song(session_id): 
-  return spotify_request(session_id, 'player/play', put_=True)
+  return spotify_request(session_id, "player/play", put_=True)
 
   
-def play_song(session_id): 
+def pause_song(session_id): 
   return spotify_request(session_id, 'player/pause', put_=True)

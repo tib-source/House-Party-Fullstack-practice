@@ -9,11 +9,21 @@ import {
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 import PauseIcon from "@material-ui/icons/Pause";
+import Pause from "@material-ui/icons/Pause";
 
 export default class MusicPlayer extends Component {
   constructor(props) {
     super(props);
   }
+
+  alterSong = (state) => {
+    fetch(`/spotify/${state}/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
 
   render() {
     const songProgress = (this.props.time / this.props.duration) * 100;
@@ -40,7 +50,13 @@ export default class MusicPlayer extends Component {
               {this.props.artist}
             </Typography>
             <div>
-              <IconButton>
+              <IconButton
+                onClick={
+                  this.props.is_playing
+                    ? this.alterSong("pause")
+                    : this.alterSong("play")
+                }
+              >
                 {this.props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
               </IconButton>
               <IconButton>
