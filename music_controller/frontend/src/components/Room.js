@@ -173,6 +173,9 @@ export class Room extends Component {
 }
 
 export default Room;
+
+
+
 // <div>
 //   <h2>{this.roomCode}</h2>
 //   <p>votesToSkip: {this.state.votesToSkip}</p>
