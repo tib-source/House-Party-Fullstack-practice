@@ -16,7 +16,7 @@ export class Room extends Component {
       showSetting: false,
       spotifyAuth: false,
       song: {},
-    };
+    }; 
 
     this.roomCode = this.props.match.params.roomCode;
   }
